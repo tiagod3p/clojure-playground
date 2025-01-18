@@ -64,3 +64,19 @@
 
 ;; -------------------------------------------------
 
+(defn spin-words [strng]
+  (clojure.string/replace strng #"\b\w{5,}\b"  clojure.string/reverse))
+
+;; -------------------------------------------------
+
+(defn clean-string [s]
+  (->> s
+       (iterate #(clojure.string/replace % #"(?:^|[^#])#" ""))
+       (drop-while #(clojure.string/includes? % "#"))
+       first))
+
+(clean-string "abc#d##c")
+
+(clean-string "abc####d##c#")
+
+;; -------------------------------------------------
