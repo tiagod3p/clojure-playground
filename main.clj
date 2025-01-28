@@ -1,3 +1,4 @@
+(require '[clojure.string :as string])
 
 ;; twos-difference exercise
 (defn get-next-number
@@ -52,11 +53,11 @@
 
 (defn order-weight [strng]
   (->> #" "
-       (clojure.string/split strng)
+       (string/split strng)
        sort
        (sort #(< (reduce + (map num-str->digits %1))
                  (reduce + (map num-str->digits %2))))
-       (clojure.string/join " ")))
+       (string/join " ")))
 
 (order-weight "103 123 4444 99 2000")
 
@@ -65,14 +66,14 @@
 ;; -------------------------------------------------
 
 (defn spin-words [strng]
-  (clojure.string/replace strng #"\b\w{5,}\b"  clojure.string/reverse))
+  (string/replace strng #"\b\w{5,}\b" string/reverse))
 
 ;; -------------------------------------------------
 
 (defn clean-string [s]
   (->> s
-       (iterate #(clojure.string/replace % #"(?:^|[^#])#" ""))
-       (drop-while #(clojure.string/includes? % "#"))
+       (iterate #(string/replace % #"(?:^|[^#])#" ""))
+       (drop-while #(string/includes? % "#"))
        first))
 
 (clean-string "abc#d##c")
@@ -80,3 +81,41 @@
 (clean-string "abc####d##c#")
 
 ;; -------------------------------------------------
+
+(defn twosum [numbers target]
+  (first (for [[i1 x1] (map-indexed vector numbers)
+               [i2 x2] (map-indexed vector numbers)
+               :when (and (= target (+ x1 x2))
+                          (not= i1 i2))]
+           [i1
+            i2])))
+
+(twosum [1 2 3 4] 4)
+
+;; -----------------------------------------------
+
+(defn in-array [array1 array2]
+  (sort
+   (distinct
+    (for [substr       array1
+          complete-str array2
+          :when (string/includes? complete-str substr)]
+      substr))))
+
+(def ur ["olp" "love" "string"])
+(def vr ["ulove" "alove" "holp" "sholp","vfmstring"])
+
+(in-array ur vr)
+
+;; --------------------------
+
+(defn fib
+  ([]
+   (fib 1 1))
+  ([a b]
+   (lazy-seq
+    (cons a (fib b (+ a b))))))
+
+(take 10 (fib))
+
+;; --------------------------
